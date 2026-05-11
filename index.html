@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محلل محادثات واتساب - WhatsApp Chat Analyzer</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fab fa-whatsapp"></i>
+                    <h1>محلل محادثات واتساب</h1>
+                </div>
+                <p class="subtitle">تحليل شامل ومفصل لمحادثاتك</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div class="upload-card">
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h2>اختر ملف الدردشة</h2>
+                        <p>انقر أو اسحب ملف chat.txt هنا</p>
+                        <input type="file" id="fileInput" accept=".txt" hidden>
+                    </div>
+                    <button class="btn btn-primary" id="uploadBtn">رفع الملف</button>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div class="loading-state" id="loadingState" style="display: none;">
+                <div class="spinner"></div>
+                <p>جاري معالجة الملف...</p>
+            </div>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">إجمالي الرسائل</p>
+                            <p class="stat-value" id="totalMessages">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">المشاركون</p>
+                            <p class="stat-value" id="totalUsers">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">الرموز التعبيرية</p>
+                            <p class="stat-value" id="totalEmojis">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">الروابط المشاركة</p>
+                            <p class="stat-value" id="totalLinks">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs Navigation -->
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="words">
+                        <i class="fas fa-font"></i> الكلمات
+                    </button>
+                    <button class="tab-btn" data-tab="emojis">
+                        <i class="fas fa-grin-hearts"></i> الرموز
+                    </button>
+                    <button class="tab-btn" data-tab="users">
+                        <i class="fas fa-user-circle"></i> المستخدمون
+                    </button>
+                    <button class="tab-btn" data-tab="sentiment">
+                        <i class="fas fa-heart"></i> المشاعر
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Words Tab -->
+                    <div class="tab-pane active" id="words-tab">
+                        <div class="content-card">
+                            <h3>أكثر الكلمات استخداماً</h3>
+                            <div class="chart-container">
+                                <div id="topWordsChart" class="chart"></div>
+                            </div>
+                            <ul class="words-list" id="wordsList"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Emojis Tab -->
+                    <div class="tab-pane" id="emojis-tab">
+                        <div class="content-card">
+                            <h3>الرموز التعبيرية الأكثر استخداماً</h3>
+                            <div class="emojis-grid" id="emojisGrid"></div>
+                        </div>
+                    </div>
+
+                    <!-- Users Tab -->
+                    <div class="tab-pane" id="users-tab">
+                        <div class="content-card">
+                            <h3>إحصائيات المستخدمين</h3>
+                            <div class="users-grid" id="usersGrid"></div>
+                        </div>
+                    </div>
+
+                    <!-- Sentiment Tab -->
+                    <div class="tab-pane" id="sentiment-tab">
+                        <div class="content-card">
+                            <h3>تحليل المشاعر والطاقة</h3>
+                            <div class="sentiment-grid" id="sentimentGrid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Button -->
+                <div class="export-section">
+                    <button class="btn btn-secondary" id="exportBtn">
+                        <i class="fas fa-download"></i> تحميل التقرير
+                    </button>
+                    <button class="btn btn-outline" id="resetBtn">
+                        <i class="fas fa-redo"></i> تحليل آخر
+                    </button>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <div class="error-state" id="errorState" style="display: none;">
+                <div class="error-card">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p id="errorMessage"></p>
+                    <button class="btn btn-outline" id="retryBtn">إعادة المحاولة</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 محلل محادثات واتساب | جميع الحقوق محفوظة</p>
+            <p>صُنع بـ ❤️ لتحليل المحادثات</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="static/script.js"></script>
+</body>
+
+</html>
